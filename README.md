@@ -6,11 +6,11 @@ Make sure you have [npm](https://www.npmjs.com/get-npm)<br/><br/>
 Open the folder in command promt and run<br/>
 ```
 npm install
-```<br/>
+```
 To install everything nessary<br/><br/>
 
 Then run <br/>
 ```
 npm start
-``` <br/>
+```
 to run the program
