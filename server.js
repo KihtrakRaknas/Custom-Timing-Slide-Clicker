@@ -22,11 +22,12 @@ const inquirer = require('inquirer');
         //args: ['--disable-infobars'],
         headless: false,
         defaultViewport: null,
+	executablePath: '/usr/bin/chromium-browser'
         //executablePath:'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
       });
     const page = await browser.newPage();
     //await page.setViewport({ width: 1920, height: 926 });
-    await page.goto(params["link"],{waitUntil:"networkidle2"});
+    await page.goto(params["link"],{timeout:120000, waitUntil:"networkidle2"});
     /*await page.keyboard.down('Control');
     await page.keyboard.down('Shift');
     await page.keyboard.press('KeyF');*/
@@ -53,8 +54,9 @@ const inquirer = require('inquirer');
             }
         })
         if(lastSlide){
-                await page.click('div[title="Play"]')
-            //await page.goto(params["link"],{waitUntil:"networkidle2"});
+                //await page.click('div[title="Play"]')
+            await page.goto(params["link"],{timeout:120000,waitUntil:"networkidle2"});
+	await page.click('div[title="Full screen (Ctrl+Shift+F)"]')
              /*   await page.keyboard.down('Control');
             await page.keyboard.down('Shift');
             await page.keyboard.press('KeyF');*/
