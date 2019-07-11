@@ -51,6 +51,7 @@ var fullScreenYet = false
 	if(fullScreenYet){
 		try{
 			await page.click('div[title="Full screen (Ctrl+Shift+F)"]')
+			await page.evaluate(()=>document.querySelector('[title="Full screen (Ctrl+Shift+F)"]').title="")
 		}catch(e){
 			//console.log("No full screen btn (not really an error don't freak out)")
 		}
@@ -67,8 +68,8 @@ var fullScreenYet = false
 	fullScreenYet=true
                 //await page.click('div[title="Play"]')
             await page.goto(params["link"],{timeout:120000,waitUntil:"networkidle2"});
-    await page.click('div[title="Full screen (Ctrl+Shift+F)"]')
-    await page.evaluate(()=>document.querySelector('[title="Exit full screen (Ctrl+Shift+F)"]').title="")
+    await page.evaluate(()=>document.querySelector('[title="Full screen (Ctrl+Shift+F)"]').title="")
+    await page.click('div[class="punch-viewer-icon punch-viewer-full-screen goog-inline-block"]')
                /* await page.keyboard.down('Control');
             await page.keyboard.down('Shift');
             await page.keyboard.press('KeyF'); */
