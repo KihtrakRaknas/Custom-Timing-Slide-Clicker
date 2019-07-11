@@ -3,6 +3,9 @@ var fetchVideoInfo = require('youtube-info');
 const inquirer = require('inquirer');
 
 (async () => {
+
+var fullScreenYet = false
+
     var questions = [{
         name:"link",
         default:"https://docs.google.com/presentation/d/e/2PACX-1vRAGVJsh2vJkXe6fs0WHGKZveHICMFNnAnPJp4VARQZKlsJPmlKRb_41MobG2tbR0OhzWpNdxIbPGW5/pub?start=true&loop=true&delayms=60000",
@@ -45,6 +48,13 @@ const inquirer = require('inquirer');
                 delay = Number(params["delay"])*1000
             await page.waitFor(delay)
         }
+	if(fullScreenYet){
+		try{
+			await page.click('div[title="Full screen (Ctrl+Shift+F)"]')
+		}catch(e){
+			console.log("No full screen btn (not really an error don't freak out)")
+		}
+	}
         await page.keyboard.press('Space');
         var lastSlide = await page.evaluate(()=>{
             for(el of document.getElementsByClassName("goog-inline-block goog-flat-button")){
@@ -54,12 +64,13 @@ const inquirer = require('inquirer');
             }
         })
         if(lastSlide){
-                //await page.click('div[title="Play"]')
-            await page.goto(params["link"],{timeout:120000,waitUntil:"networkidle2"});
-	await page.click('div[title="Full screen (Ctrl+Shift+F)"]')
-             /*   await page.keyboard.down('Control');
+	fullScreenYet=true
+                await page.click('div[title="Play"]')
+            //await page.goto(params["link"],{timeout:120000,waitUntil:"networkidle2"});
+	//await page.click('div[title="Full screen (Ctrl+Shift+F)"]')
+               /* await page.keyboard.down('Control');
             await page.keyboard.down('Shift');
-            await page.keyboard.press('KeyF');*/
+            await page.keyboard.press('KeyF'); */
         }
     }
     
