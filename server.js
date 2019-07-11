@@ -25,7 +25,7 @@ var fullScreenYet = false
         //args: ['--disable-infobars'],
         headless: false,
         defaultViewport: null,
-	executablePath: '/usr/bin/chromium-browser'
+	//executablePath: '/usr/bin/chromium-browser'
         //executablePath:'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
       });
     const page = await browser.newPage();
@@ -52,7 +52,7 @@ var fullScreenYet = false
 		try{
 			await page.click('div[title="Full screen (Ctrl+Shift+F)"]')
 		}catch(e){
-			console.log("No full screen btn (not really an error don't freak out)")
+			//console.log("No full screen btn (not really an error don't freak out)")
 		}
 	}
         await page.keyboard.press('Space');
@@ -65,9 +65,10 @@ var fullScreenYet = false
         })
         if(lastSlide){
 	fullScreenYet=true
-                await page.click('div[title="Play"]')
-            //await page.goto(params["link"],{timeout:120000,waitUntil:"networkidle2"});
-	//await page.click('div[title="Full screen (Ctrl+Shift+F)"]')
+                //await page.click('div[title="Play"]')
+            await page.goto(params["link"],{timeout:120000,waitUntil:"networkidle2"});
+    await page.click('div[title="Full screen (Ctrl+Shift+F)"]')
+    await page.evaluate(()=>document.querySelector('[title="Exit full screen (Ctrl+Shift+F)"]').title="")
                /* await page.keyboard.down('Control');
             await page.keyboard.down('Shift');
             await page.keyboard.press('KeyF'); */
