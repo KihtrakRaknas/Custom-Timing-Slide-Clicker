@@ -25,7 +25,7 @@ var fullScreenYet = false
         //args: ['--disable-infobars'],
         headless: false,
         defaultViewport: null,
-	//executablePath: '/usr/bin/chromium-browser'
+	executablePath: '/usr/bin/chromium-browser'
         //executablePath:'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
       });
     const page = await browser.newPage();
