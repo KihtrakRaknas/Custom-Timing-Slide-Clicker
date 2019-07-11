@@ -51,7 +51,7 @@ var fullScreenYet = false
 	if(fullScreenYet){
 		try{
 			await page.evaluate(()=>document.querySelector('[title="Full screen (Ctrl+Shift+F)"]').title="")		
-			await page.click('div[class="punch-viewer-icon punch-viewer-full-screen goog-inline-block"]'
+			await page.click('div[class="punch-viewer-icon punch-viewer-full-screen goog-inline-block"]')
 		}catch(e){
 			//console.log("No full screen btn (not really an error don't freak out)")
 		}
