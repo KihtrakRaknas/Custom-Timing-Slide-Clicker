@@ -12,9 +12,9 @@
   </head>
   <body>
     <h1 class="text-center">PI STATS</h1>
-    <div id="myDiv"></div>
-    <h6 class="text-center display-4">Last alive: <span id="lastAlive"></span></h6>
-    <h6 class="text-center display-4">Last temp: <span id="lastTemp"></span></h6>
+    <div id="myDiv" style="width:100%;padding:0;margin:0;"></div>
+    <h6 class="text-center">Last alive: <span id="lastAlive"></span></h6>
+    <h6 class="text-center">Last temp: <span id="lastTemp"></span></h6>
     <div class="container">
         <button type="button" class="btn btn-danger btn-lg btn-block" onclick="reset()">Reset</button>
     </div>
@@ -98,7 +98,7 @@
         };
         var data = [ trace2 ];
         var layout = {
-            title:'Temp'
+            title:'Temperature of the Pi over time'
         };
         Plotly.newPlot('myDiv', data, layout,{displayModeBar: false});
     });
