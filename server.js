@@ -86,6 +86,11 @@ var fullScreenYet = false
     /*tempRef.update({
         temps: admin.firestore.FieldValue.arrayUnion({temp:Math.random()*50+20,timestamp:new Date().getTime()})
     });*/
+	    
+	    var slideNum = page.evaluate(()=>{
+		    if(document.getElementsByClassName("goog-inline-block goog-flat-menu-button-caption").length>0)
+		    	document.getElementsByClassName("goog-inline-block goog-flat-menu-button-caption")[0].innerText
+	    })
     if(pi){
         temp.measure(function(err, temp) {
             if (err){
@@ -93,7 +98,7 @@ var fullScreenYet = false
             }else{
                 console.log("It's " + temp + " celsius.");
                 tempRef.update({
-                    temps: admin.firestore.FieldValue.arrayUnion({temp:temp,timestamp:new Date().getTime()})
+                    temps: admin.firestore.FieldValue.arrayUnion({temp:temp,timestamp:new Date().getTime(),status:slideNum})
                 });
             } 
         });
@@ -111,10 +116,34 @@ var fullScreenYet = false
         })
         if(lastSlide){
 	fullScreenYet=true
+		    if(pi){
+			temp.measure(function(err, temp) {
+			    if (err){
+				console.log(err);
+			    }else{
+				console.log("It's " + temp + " celsius.");
+				tempRef.update({
+				    temps: admin.firestore.FieldValue.arrayUnion({temp:temp,timestamp:new Date().getTime(),status:"Refreshing Slides"})
+				});
+			    } 
+			});
+		    }
                 //await page.click('div[title="Play"]')
             await page.goto(params["link"],{timeout:120000,waitUntil:"networkidle2"});
     await page.evaluate(()=>document.querySelector('[title="Full screen (Ctrl+Shift+F)"]').title="")
     await page.click('div[class="punch-viewer-icon punch-viewer-full-screen goog-inline-block"]')
+				    if(pi){
+					temp.measure(function(err, temp) {
+					    if (err){
+						console.log(err);
+					    }else{
+						console.log("It's " + temp + " celsius.");
+						tempRef.update({
+						    temps: admin.firestore.FieldValue.arrayUnion({temp:temp,timestamp:new Date().getTime(),status:"Clicking Full Screen"})
+						});
+					    } 
+					});
+				    }
                /* await page.keyboard.down('Control');
             await page.keyboard.down('Shift');
             await page.keyboard.press('KeyF'); */
