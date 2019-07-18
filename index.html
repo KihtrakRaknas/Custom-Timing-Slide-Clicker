@@ -18,6 +18,14 @@
     <div class="container">
         <button type="button" class="btn btn-danger btn-lg btn-block" onclick="reset()">Reset</button>
     </div>
+    <div class="container table-div">
+      <table class="table table-dark">
+
+        <tbody id="tbody">
+          
+        </tbody>
+      </table>
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -80,12 +88,16 @@
 
     db.collection("temperatures").doc("temps")
     .onSnapshot(function(doc) {
+        document.getElementById('tbody').innerHTML = '<tr><td class="withdrew">You withdrew '+ v + ' dollars</td></tr>' + document.getElementById('tbody').innerHTML;
         doc.data()["temps"]
         var tempz = []
         timez = []
+        document.getElementById('tbody').innerHTML = "";
         for(obj of doc.data()["temps"]){
             timez.push(new Date(obj["timestamp"]))
             tempz.push(obj["temp"]* 9 / 5 + 32) //Convert from C to F
+            if(obj["status"])
+              document.getElementById('tbody').innerHTML = '<tr><td class="withdrew">'+obj["status"]+'</td></tr>' + document.getElementById('tbody').innerHTML;
         }
         if(tempz.length>0)
             document.getElementById("lastTemp").innerText = Number.parseFloat(tempz[tempz.length-1]).toFixed(2) + '℉'
