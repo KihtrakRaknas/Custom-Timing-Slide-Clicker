@@ -88,7 +88,7 @@
             tempz.push(obj["temp"]* 9 / 5 + 32) //Convert from C to F
         }
         if(tempz.length>0)
-            document.getElementById("lastTemp").innerText = tempz[tempz.length-1] + '℉'
+            document.getElementById("lastTemp").innerText = Number.parseFloat(tempz[tempz.length-1]).toFixed(2) + '℉'
         else   
             document.getElementById("lastTemp").innerText = "No data available"
         var trace2 = {
