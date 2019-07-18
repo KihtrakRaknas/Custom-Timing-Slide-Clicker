@@ -87,7 +87,7 @@ var fullScreenYet = false
         temps: admin.firestore.FieldValue.arrayUnion({temp:Math.random()*50+20,timestamp:new Date().getTime()})
     });*/
 	    
-	    var slideNum = page.evaluate(()=>{
+	    var slideNum = await page.evaluate(()=>{
 		    if(document.getElementsByClassName("goog-inline-block goog-flat-menu-button-caption").length>0)
 		    	return document.getElementsByClassName("goog-inline-block goog-flat-menu-button-caption")[0].innerText
 		return "Slide Number Not Found"
