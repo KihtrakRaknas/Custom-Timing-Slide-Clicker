@@ -11,6 +11,7 @@ var temp = require("pi-temperature");
 var datetime = require('node-datetime');
 let db = admin.firestore();
 let tempRef = db.collection('temperatures').doc('temps');
+const CRX_PATH = '/home/pi/h264ify';
 //Should be true in production
 const pi = true;
 
@@ -43,9 +44,13 @@ var fullScreenYet = false
       if(pi){
         broswerParams = {
             //args: ['--disable-infobars'],
+		args: [
+			`--disable-extensions-except=${CRX_PATH}`,
+    			`--load-extension=${CRX_PATH}`
+		],
             headless: false,
             defaultViewport: null,
-            executablePath: '/usr/bin/chromium-browser'
+            executablePath: '/usr/bin/chromium-browser',
             //executablePath:'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
           }
       }
@@ -88,7 +93,7 @@ var fullScreenYet = false
             }else{
                 console.log("It's " + temp + " celsius.");
                 tempRef.update({
-                    temps: admin.firestore.FieldValue.arrayUnion({temp:temp,timestamp:datetime.getTime()})
+                    temps: admin.firestore.FieldValue.arrayUnion({temp:temp,timestamp:new Date().getTime()})
                 });
             } 
         });
