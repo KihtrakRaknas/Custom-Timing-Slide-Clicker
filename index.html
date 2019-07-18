@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>PI STATS</title>
+  </head>
+  <body>
+    <div class="container">
+        <h1 class="text-center">PI STATS</h1>
+        <div id="myDiv"></div>
+        <h6 class="text-center display-4">Last alive: <span id="lastAlive"></span></h6>
+        <h6 class="text-center display-4">Last temp: <span id="lastTemp"></span></h6>
+        <button type="button" class="btn btn-danger btn-lg btn-block" onclick="reset()">Reset</button>
+    </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/6.3.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.3.0/firebase-firestore.js"></script>
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#config-web-app -->
+
+    <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+        apiKey: "AIzaSyDgW8lDgQl9voW9syURoc1g_Pg1kFmVqCg",
+        authDomain: "library-pi-8b021.firebaseapp.com",
+        databaseURL: "https://library-pi-8b021.firebaseio.com",
+        projectId: "library-pi-8b021",
+        storageBucket: "library-pi-8b021.appspot.com",
+        messagingSenderId: "936499105535",
+        appId: "1:936499105535:web:3a25af20d293627b"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    var db = firebase.firestore();
+    var timez = []
+    setInterval(()=>{
+        if(timez.length>0){
+            var difference = new Date().getTime() - new Date(timez[timez.length-1]);
+            document.getElementById("lastAlive").innerText = ""
+
+            var daysDifference = Math.floor(difference/1000/60/60/24);
+            difference -= daysDifference*1000*60*60*24
+            if(daysDifference)
+            document.getElementById("lastAlive").innerText += daysDifference+" days "
+
+            var hoursDifference = Math.floor(difference/1000/60/60);
+            difference -= hoursDifference*1000*60*60
+            if(hoursDifference)
+            document.getElementById("lastAlive").innerText += " "+hoursDifference+" hours "
+
+            var minutesDifference = Math.floor(difference/1000/60);
+            difference -= minutesDifference*1000*60
+            if(minutesDifference)
+            document.getElementById("lastAlive").innerText += " "+minutesDifference+" minutes "
+
+            var secondsDifference = Math.floor(difference/1000);
+            if(secondsDifference)
+            document.getElementById("lastAlive").innerText += " "+secondsDifference+" seconds "
+
+            document.getElementById("lastAlive").innerText += " ago "
+
+            
+        }else{
+            document.getElementById("lastAlive").innerText = "No data available"
+        }
+    },1000)
+
+    db.collection("temperatures").doc("temps")
+    .onSnapshot(function(doc) {
+        doc.data()["temps"]
+        var tempz = []
+        timez = []
+        for(obj of doc.data()["temps"]){
+            timez.push(new Date(obj["timestamp"]))
+            tempz.push(obj["temp"]* 9 / 5 + 32) //Convert from C to F
+        }
+        if(tempz.length>0)
+            document.getElementById("lastTemp").innerText = tempz[tempz.length-1] + '℉'
+        else   
+            document.getElementById("lastTemp").innerText = "No data available"
+        var trace2 = {
+            x: timez,
+            y: tempz,
+            mode: 'lines+markers'
+        };
+        var data = [ trace2 ];
+        var layout = {
+            title:'Temp'
+        };
+        Plotly.newPlot('myDiv', data, layout,{displayModeBar: false});
+    });
+
+    function reset(){
+        db.collection("temperatures").doc("temps").update({
+            temps: []
+        })
+    }
+
+    </script>
+  </body>
+</html>

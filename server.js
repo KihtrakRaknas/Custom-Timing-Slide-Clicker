@@ -1,18 +1,19 @@
 const puppeteer = require('puppeteer');
 var fetchVideoInfo = require('youtube-info');
 const inquirer = require('inquirer');
+let serviceAccount = require('./library-pi.json');
 var admin = require("firebase-admin");
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://library-pi-8b021.firebaseio.com"
+  });
 var temp = require("pi-temperature");
 var datetime = require('node-datetime');
 let db = admin.firestore();
 let tempRef = db.collection('temperatures').doc('temps');
+//Should be true in production
+const pi = true;
 
-let serviceAccount = require('library-pi.json');
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  databaseURL: "https://library-pi-8b021.firebaseio.com"
-});
 
 (async () => {
 
@@ -32,14 +33,23 @@ var fullScreenYet = false
       var params = await inquirer.prompt(questions)
       
 
-
-    const browser = await puppeteer.launch({
+    let broswerParams = {
         //args: ['--disable-infobars'],
         headless: false,
         defaultViewport: null,
-	    executablePath: '/usr/bin/chromium-browser'
+	    //executablePath: '/usr/bin/chromium-browser'
         //executablePath:'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
-      });
+      }
+      if(pi){
+        broswerParams = {
+            //args: ['--disable-infobars'],
+            headless: false,
+            defaultViewport: null,
+            executablePath: '/usr/bin/chromium-browser'
+            //executablePath:'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
+          }
+      }
+    const browser = await puppeteer.launch(broswerParams);
     const page = await browser.newPage();
     //await page.setViewport({ width: 1920, height: 926 });
     await page.goto(params["link"],{timeout:120000, waitUntil:"networkidle2"});
@@ -68,20 +78,25 @@ var fullScreenYet = false
 			//console.log("No full screen btn (not really an error don't freak out)")
 		}
     }
-    temp.measure(function(err, temp) {
-        if (err){
-            console.error(err);
-            
-        } 
-        else{
-            console.log("It's " + temp + " celsius.");
-            tempRef.update({
-                temps: admin.firestore.FieldValue.arrayUnion({temp:temp,timestamp:datetime.getTime()})
-            });
-        } 
-    });
+    /*tempRef.update({
+        temps: admin.firestore.FieldValue.arrayUnion({temp:Math.random()*50+20,timestamp:new Date().getTime()})
+    });*/
+    if(pi){
+        temp.measure(function(err, temp) {
+            if (err){
+                console.log(err);
+            }else{
+                console.log("It's " + temp + " celsius.");
+                tempRef.update({
+                    temps: admin.firestore.FieldValue.arrayUnion({temp:temp,timestamp:datetime.getTime()})
+                });
+            } 
+        });
+    }
 
-        await page.keyboard.press('Space');
+        //await page.keyboard.press('Space');
+        await page.click('div[title="Next (→)"]')
+
         var lastSlide = await page.evaluate(()=>{
             for(el of document.getElementsByClassName("goog-inline-block goog-flat-button")){
                 if(el.title == "Next (→)"){
