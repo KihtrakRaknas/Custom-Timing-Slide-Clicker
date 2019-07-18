@@ -1,6 +1,18 @@
 const puppeteer = require('puppeteer');
 var fetchVideoInfo = require('youtube-info');
 const inquirer = require('inquirer');
+var admin = require("firebase-admin");
+var temp = require("pi-temperature");
+var datetime = require('node-datetime');
+let db = admin.firestore();
+let tempRef = db.collection('temperatures').doc('temps');
+
+let serviceAccount = require('library-pi.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://library-pi-8b021.firebaseio.com"
+});
 
 (async () => {
 
@@ -25,7 +37,7 @@ var fullScreenYet = false
         //args: ['--disable-infobars'],
         headless: false,
         defaultViewport: null,
-	executablePath: '/usr/bin/chromium-browser'
+	    executablePath: '/usr/bin/chromium-browser'
         //executablePath:'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe'
       });
     const page = await browser.newPage();
@@ -40,7 +52,7 @@ var fullScreenYet = false
         if(vid){
             var url = await page.evaluate(()=>document.getElementsByTagName("iframe")[document.getElementsByTagName("iframe").length-1].src)
             var info = await fetchVideoInfo(YouTubeGetID(url))
-            console.log(info.duration)
+            console.log("Video: "+info.duration)
             await page.waitFor(info.duration*1000)
         }else{
             var delay = 9.5*1000;
@@ -55,7 +67,20 @@ var fullScreenYet = false
 		}catch(e){
 			//console.log("No full screen btn (not really an error don't freak out)")
 		}
-	}
+    }
+    temp.measure(function(err, temp) {
+        if (err){
+            console.error(err);
+            
+        } 
+        else{
+            console.log("It's " + temp + " celsius.");
+            tempRef.update({
+                temps: admin.firestore.FieldValue.arrayUnion({temp:temp,timestamp:datetime.getTime()})
+            });
+        } 
+    });
+
         await page.keyboard.press('Space');
         var lastSlide = await page.evaluate(()=>{
             for(el of document.getElementsByClassName("goog-inline-block goog-flat-button")){
