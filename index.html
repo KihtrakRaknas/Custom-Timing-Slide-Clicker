@@ -9,6 +9,23 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <title>PI STATS</title>
+    
+    <style>
+          .table-div{
+        overflow-x: hidden;
+        overflow-y: scroll;
+          height:70vh;
+          
+      }
+      table{
+        width:100%;
+          border-radius: 20px;
+      }
+      table, tr, td{
+        margin:auto 0; 
+        text-align:center;
+      }
+    </style>
   </head>
   <body>
     <h1 class="text-center">PI STATS</h1>
@@ -97,7 +114,7 @@
             timez.push(new Date(obj["timestamp"]))
             tempz.push(obj["temp"]* 9 / 5 + 32) //Convert from C to F
             if(obj["status"])
-              document.getElementById('tbody').innerHTML = '<tr><td class="withdrew">'+obj["status"]+'</td></tr>' + document.getElementById('tbody').innerHTML;
+              document.getElementById('tbody').innerHTML = '<tr><td class="withdrew">'+obj["status"]+" - "+new Date(obj["timestamp"])+'</td></tr>' + document.getElementById('tbody').innerHTML;
         }
         if(tempz.length>0)
             document.getElementById("lastTemp").innerText = Number.parseFloat(tempz[tempz.length-1]).toFixed(2) + '℉'
