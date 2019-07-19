@@ -1,3 +1,5 @@
+const pi = false;
+
 const puppeteer = require('puppeteer');
 var fetchVideoInfo = require('youtube-info');
 const inquirer = require('inquirer');
@@ -13,7 +15,6 @@ let db = admin.firestore();
 let tempRef = db.collection('temperatures').doc('temps');
 const CRX_PATH = '/home/pi/h264ify';
 //Should be true in production
-const pi = true;
 var os = require('os-utils');
 
 (async () => {
@@ -108,10 +109,24 @@ var fullScreenYet = false
 	        fullScreenYet=true
             logToFirebase("Refreshing Slides")
             //await page.click('div[title="Play"]')
-            await page.goto(params["link"],{timeout:120000,waitUntil:"networkidle2"});
+            await page.goto(params["link"],{timeout:120000,waitUntil:"domcontentloaded"});
+            let fullScreenBtnExists = null;
+            do{
+                if(fullScreenBtnExists != null)
+                    await page.waitFor(1000)
+                fullScreenBtnExists = await page.evaluate(()=>{
+                    if(document.querySelector('[title="Full screen (Ctrl+Shift+F)"]')){
+                        return true
+                    }
+                    return false
+                })
+                logToFirebase("Checking for Full Screen Btn - "+fullScreenBtnExists)
+            }while(!fullScreenBtnExists)
+            logToFirebase("Removing Title from Btn")
             await page.evaluate(()=>document.querySelector('[title="Full screen (Ctrl+Shift+F)"]').title="")
-            await page.click('div[class="punch-viewer-icon punch-viewer-full-screen goog-inline-block"]')
             logToFirebase("Clicking Full Screen")
+            await page.click('div[class="punch-viewer-icon punch-viewer-full-screen goog-inline-block"]')
+            logToFirebase("Clicked Full Screen")
             /* await page.keyboard.down('Control');
             await page.keyboard.down('Shift');
             await page.keyboard.press('KeyF'); */
