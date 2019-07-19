@@ -44,10 +44,10 @@ var fullScreenYet = false
       if(pi){
         broswerParams = {
             //args: ['--disable-infobars'],
-		/*args: [
+		args: [
 			`--disable-extensions-except=${CRX_PATH}`,
     			`--load-extension=${CRX_PATH}`
-		],*/
+		],
             headless: false,
             defaultViewport: null,
             executablePath: '/usr/bin/chromium-browser',
