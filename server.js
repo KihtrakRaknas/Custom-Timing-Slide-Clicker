@@ -14,7 +14,7 @@ let tempRef = db.collection('temperatures').doc('temps');
 const CRX_PATH = '/home/pi/h264ify';
 //Should be true in production
 const pi = true;
-
+var os = require('os-utils');
 
 (async () => {
 
@@ -92,15 +92,19 @@ var fullScreenYet = false
 		    	return document.getElementsByClassName("goog-inline-block goog-flat-menu-button-caption")[0].innerText
 		return "Slide Number Not Found"
 	    })
+	    
     if(pi){
         temp.measure(function(err, temp) {
             if (err){
                 console.log(err);
             }else{
                 console.log("It's " + temp + " celsius.");
-                tempRef.update({
-                    temps: admin.firestore.FieldValue.arrayUnion({temp:temp,timestamp:new Date().getTime(),status:slideNum})
-                });
+		    os.cpuUsage(function(v){
+			    console.log( 'CPU Usage (%): ' + v );
+			          tempRef.update({
+				    temps: admin.firestore.FieldValue.arrayUnion({temp:temp,timestamp:new Date().getTime(),status:slideNum,cpu:v,mem:os.freemem()/os.totalmem()})
+				});
+			});
             } 
         });
     }
