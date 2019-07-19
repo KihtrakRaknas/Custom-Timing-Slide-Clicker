@@ -31,9 +31,8 @@ var fullScreenYet = false
         message:"delay for static pages (s)"
     }]
       
-      var params = await inquirer.prompt(questions)
-      
-
+    var params = await inquirer.prompt(questions)
+    
     let broswerParams = {
         //args: ['--disable-infobars'],
         headless: false,
@@ -44,10 +43,10 @@ var fullScreenYet = false
       if(pi){
         broswerParams = {
             //args: ['--disable-infobars'],
-		/*args: [
-			`--disable-extensions-except=${CRX_PATH}`,
-    			`--load-extension=${CRX_PATH}`
-		],*/
+            /*args: [
+                `--disable-extensions-except=${CRX_PATH}`,
+                    `--load-extension=${CRX_PATH}`
+            ],*/
             headless: false,
             defaultViewport: null,
             executablePath: '/usr/bin/chromium-browser',
@@ -108,12 +107,12 @@ var fullScreenYet = false
         if(lastSlide){
 	        fullScreenYet=true
             logToFirebase("Refreshing Slides")
-                //await page.click('div[title="Play"]')
+            //await page.click('div[title="Play"]')
             await page.goto(params["link"],{timeout:120000,waitUntil:"networkidle2"});
-    await page.evaluate(()=>document.querySelector('[title="Full screen (Ctrl+Shift+F)"]').title="")
-    await page.click('div[class="punch-viewer-icon punch-viewer-full-screen goog-inline-block"]')
-                    logToFirebase("Clicking Full Screen")
-               /* await page.keyboard.down('Control');
+            await page.evaluate(()=>document.querySelector('[title="Full screen (Ctrl+Shift+F)"]').title="")
+            await page.click('div[class="punch-viewer-icon punch-viewer-full-screen goog-inline-block"]')
+            logToFirebase("Clicking Full Screen")
+            /* await page.keyboard.down('Control');
             await page.keyboard.down('Shift');
             await page.keyboard.press('KeyF'); */
         }
@@ -125,29 +124,34 @@ function YouTubeGetID(url){
     var ID = '';
     url = url.replace(/(>|<)/gi,'').split(/(vi\/|v=|\/v\/|youtu\.be\/|\/embed\/)/);
     if(url[2] !== undefined) {
-      ID = url[2].split(/[^0-9a-z_\-]/i);
-      ID = ID[0];
+        ID = url[2].split(/[^0-9a-z_\-]/i);
+        ID = ID[0];
+    }else{
+        ID = url;
     }
-    else {
-      ID = url;
-    }
-      return ID;
-  }
+    return ID;
+}
 
-  function logToFirebase(status){
+function logToFirebase(status){
     if(pi){
         temp.measure(function(err, temp) {
             if (err){
                 console.log(err);
             }else{
                 console.log("It's " + temp + " celsius.");
-		    os.cpuUsage(function(v){
-			    console.log( 'CPU Usage (%): ' + v );
-			          tempRef.update({
-				     temps: admin.firestore.FieldValue.arrayUnion({temp:temp,timestamp:new Date().getTime(),status:status,cpu:v,mem:os.freemem()/os.totalmem()})
-				});
-			});
+                os.cpuUsage(function(v){
+                    console.log( 'CPU Usage (%): ' + v );
+                    tempRef.update({
+                        temps: admin.firestore.FieldValue.arrayUnion({
+                            temp:temp,
+                            timestamp:new Date().getTime(),
+                            status:status,
+                            cpu:v,
+                            mem:os.freemem()/os.totalmem()
+                        })
+                    });
+                });
             } 
         });
     }
-  }
+}
