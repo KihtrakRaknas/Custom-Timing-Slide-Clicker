@@ -29,9 +29,13 @@
   </head>
   <body>
     <h1 class="text-center">PI STATS</h1>
-    <div id="myDiv" style="width:100%;padding:0;margin:0;"></div>
     <h6 class="text-center">Last alive: <span id="lastAlive"></span></h6>
     <h6 class="text-center">Last temp: <span id="lastTemp"></span></h6>
+    <h6 class="text-center">Last CPU: <span id="lastCPU"></span></h6>
+    <h6 class="text-center">Last MEM: <span id="lastMem"></span></h6>
+    <div id="myDiv" style="width:100%;padding:0;margin:0;"></div>
+    <div id="cpuGragh" style="width:100%;padding:0;margin:0;"></div>
+    <div id="memGragh" style="width:100%;padding:0;margin:0;"></div>
     <div class="container">
         <button type="button" class="btn btn-danger btn-lg btn-block" onclick="reset()">Reset</button>
     </div>
@@ -110,11 +114,15 @@
         document.getElementById('tbody').innerHTML = '';
         doc.data()["temps"]
         var tempz = []
+        var cpu = []
+        var mem = []
         timez = []
         document.getElementById('tbody').innerHTML = "";
         for(obj of doc.data()["temps"]){
             timez.push(new Date(obj["timestamp"]))
             tempz.push(obj["temp"]* 9 / 5 + 32) //Convert from C to F
+            cpu.push(obj["cpu"])
+            mem.push(obj["mem"])
             if(obj["status"])
               document.getElementById('tbody').innerHTML = '<tr><td class="withdrew">'+obj["status"]+" - "+new Date(obj["timestamp"])+'</td></tr>' + document.getElementById('tbody').innerHTML;
         }
@@ -122,6 +130,15 @@
             document.getElementById("lastTemp").innerText = Number.parseFloat(tempz[tempz.length-1]).toFixed(2) + '℉'
         else   
             document.getElementById("lastTemp").innerText = "No data available"
+        if(tempz.length>0)
+            document.getElementById("lastCPU").innerText = Number.parseFloat(cpu[cpu.length-1]).toFixed(2)
+        else   
+            document.getElementById("lastCPU").innerText = "No data available"
+        if(tempz.length>0)
+            document.getElementById("lastMem").innerText = Number.parseFloat(mem[mem.length-1]).toFixed(2)
+        else   
+            document.getElementById("lastMem").innerText = "No data available"
+            
         var trace2 = {
             x: timez,
             y: tempz,
@@ -132,6 +149,26 @@
             title:'Temperature of the Pi over time'
         };
         Plotly.newPlot('myDiv', data, layout,{displayModeBar: false});
+        var cputrace = {
+            x: timez,
+            y: cpu,
+            mode: 'lines+markers'
+        };
+        var cpudata = [ cputrace ];
+        var cpulayout = {
+            title:'CPU usage of the Pi over time'
+        };
+        Plotly.newPlot('cpuGragh', cpudata, cpulayout,{displayModeBar: false});
+        var memtrace = {
+            x: timez,
+            y: mem,
+            mode: 'lines+markers'
+        };
+        var memdata = [ memtrace ];
+        var memlayout = {
+            title:'Memory usage of the Pi over time'
+        };
+        Plotly.newPlot('memGragh', memdata, memlayout,{displayModeBar: false});
     });
 
     function reset(){

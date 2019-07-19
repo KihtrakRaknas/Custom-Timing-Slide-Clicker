@@ -93,21 +93,7 @@ var fullScreenYet = false
 		return "Slide Number Not Found"
 	    })
 	    
-    if(pi){
-        temp.measure(function(err, temp) {
-            if (err){
-                console.log(err);
-            }else{
-                console.log("It's " + temp + " celsius.");
-		    os.cpuUsage(function(v){
-			    console.log( 'CPU Usage (%): ' + v );
-			          tempRef.update({
-				    temps: admin.firestore.FieldValue.arrayUnion({temp:temp,timestamp:new Date().getTime(),status:slideNum,cpu:v,mem:os.freemem()/os.totalmem()})
-				});
-			});
-            } 
-        });
-    }
+        logToFirebase(slideNum)
 
         await page.keyboard.press('Space');
         //await page.click('div[title="Next (→)"]')
@@ -120,35 +106,13 @@ var fullScreenYet = false
             }
         })
         if(lastSlide){
-	fullScreenYet=true
-		    if(pi){
-			temp.measure(function(err, temp) {
-			    if (err){
-				console.log(err);
-			    }else{
-				console.log("It's " + temp + " celsius.");
-				tempRef.update({
-				    temps: admin.firestore.FieldValue.arrayUnion({temp:temp,timestamp:new Date().getTime(),status:"Refreshing Slides"})
-				});
-			    } 
-			});
-		    }
+	        fullScreenYet=true
+            logToFirebase("Refreshing Slides")
                 //await page.click('div[title="Play"]')
             await page.goto(params["link"],{timeout:120000,waitUntil:"networkidle2"});
     await page.evaluate(()=>document.querySelector('[title="Full screen (Ctrl+Shift+F)"]').title="")
     await page.click('div[class="punch-viewer-icon punch-viewer-full-screen goog-inline-block"]')
-				    if(pi){
-					temp.measure(function(err, temp) {
-					    if (err){
-						console.log(err);
-					    }else{
-						console.log("It's " + temp + " celsius.");
-						tempRef.update({
-						    temps: admin.firestore.FieldValue.arrayUnion({temp:temp,timestamp:new Date().getTime(),status:"Clicking Full Screen"})
-						});
-					    } 
-					});
-				    }
+                    logToFirebase("Clicking Full Screen")
                /* await page.keyboard.down('Control');
             await page.keyboard.down('Shift');
             await page.keyboard.press('KeyF'); */
@@ -168,4 +132,22 @@ function YouTubeGetID(url){
       ID = url;
     }
       return ID;
+  }
+
+  function logToFirebase(status){
+    if(pi){
+        temp.measure(function(err, temp) {
+            if (err){
+                console.log(err);
+            }else{
+                console.log("It's " + temp + " celsius.");
+		    os.cpuUsage(function(v){
+			    console.log( 'CPU Usage (%): ' + v );
+			          tempRef.update({
+				     temps: admin.firestore.FieldValue.arrayUnion({temp:temp,timestamp:new Date().getTime(),status:status,cpu:v,mem:os.freemem()/os.totalmem()})
+				});
+			});
+            } 
+        });
+    }
   }
