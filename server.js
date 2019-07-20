@@ -143,8 +143,6 @@ var fullScreenYet = false
                 })
                 logToFirebase("Checking for Full Screen status - "+isFullScreen)
             }while(!isFullScreen)
-            
-            logToFirebase("Clicked Full Screen")
             /* await page.keyboard.down('Control');
             await page.keyboard.down('Shift');
             await page.keyboard.press('KeyF'); */
