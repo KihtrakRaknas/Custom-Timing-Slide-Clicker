@@ -145,7 +145,7 @@ var fullScreenYet = false
                 })
                 logToFirebase("Checking for Full Screen status - "+isFullScreen+" - Attempt #"+failedAttempts)
                 if(failedAttempts>10){
-                    logToFirebase(document.getElementsByClassName("punch-viewer-icon punch-viewer-full-screen goog-inline-block")[0].parentElement.innerHTML)
+                    logToFirebase(await page.evaluate(()=>document.getElementsByClassName("punch-viewer-icon punch-viewer-full-screen goog-inline-block")[0].parentElement.innerHTML))
                 }
             }while(!isFullScreen&&failedAttempts<20)
             /* await page.keyboard.down('Control');
