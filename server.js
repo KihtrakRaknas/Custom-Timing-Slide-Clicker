@@ -109,7 +109,7 @@ var fullScreenYet = false
 	        fullScreenYet=true
             logToFirebase("Refreshing Slides")
             //await page.click('div[title="Play"]')
-            await page.goto(params["link"],{timeout:120000,waitUntil:"domcontentloaded"});
+            await page.goto(params["link"],{timeout:120000,waitUntil:"networkidle0"});
             logToFirebase("Done refreshing Slides")
             let fullScreenBtnExists = null;
             do{
@@ -126,12 +126,14 @@ var fullScreenYet = false
             logToFirebase("Removing Title from Btn")
             await page.evaluate(()=>document.querySelector('[title="Full screen (Ctrl+Shift+F)"]').title="")
             let isFullScreen = false;
+            let failedAttempts = 0;
             do{
+                failedAttempts++
                 if(!isFullScreen){
                     logToFirebase("Clicking Full Screen")
                     //Intental no await due to a bug with puppetter's resolving of click promises
                     page.click('div[class="punch-viewer-icon punch-viewer-full-screen goog-inline-block"]')
-                    await page.waitFor(500)
+                    await page.waitFor(500*failedAttempts)
                     logToFirebase("Clicked Full Screen")
                 }
                 isFullScreen = await page.evaluate(()=>{
@@ -141,8 +143,8 @@ var fullScreenYet = false
                         return false
                     }
                 })
-                logToFirebase("Checking for Full Screen status - "+isFullScreen)
-            }while(!isFullScreen)
+                logToFirebase("Checking for Full Screen status - "+isFullScreen+" - Attempt #"+failedAttempts)
+            }while(!isFullScreen&&failedAttempts<20)
             /* await page.keyboard.down('Control');
             await page.keyboard.down('Shift');
             await page.keyboard.press('KeyF'); */
