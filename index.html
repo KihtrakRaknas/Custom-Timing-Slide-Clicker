@@ -125,7 +125,7 @@
             cpu.push(obj["cpu"])
             mem.push(obj["mem"])
             if(obj["status"])
-              document.getElementById('tbody').innerHTML = '<tr><td class="withdrew">'+obj["status"].replace(/</g, "&lt;").replace(/>/g, "&gt;");+" - "+new Date(obj["timestamp"])+'</td></tr>' + document.getElementById('tbody').innerHTML;
+              document.getElementById('tbody').innerHTML = '<tr><td class="withdrew">'+obj["status"].replace(/</g, "&lt;").replace(/>/g, "&gt;")+" - "+new Date(obj["timestamp"])+'</td></tr>' + document.getElementById('tbody').innerHTML;
         }
         if(tempz.length>0)
             document.getElementById("lastTemp").innerText = Number.parseFloat(tempz[tempz.length-1]).toFixed(2) + '℉'
