@@ -1,4 +1,4 @@
-const pi = true;
+const pi = false;
 
 const puppeteer = require('puppeteer');
 var fetchVideoInfo = require('youtube-info');
@@ -170,5 +170,7 @@ function logToFirebase(status){
                 });
             } 
         });
+    }else{
+        console.log(status)
     }
 }

@@ -30,6 +30,7 @@
   <body>
     <h1 class="text-center">PI STATS</h1>
     <h6 class="text-center">Last alive: <span id="lastAlive"></span></h6>
+    <h6 class="text-center">Last status: <span id="lastStatus"></span></h6>
     <h6 class="text-center">Last temp: <span id="lastTemp"></span></h6>
     <h6 class="text-center">Last CPU: <span id="lastCPU"></span></h6>
     <h6 class="text-center">Last MEM: <span id="lastMem"></span></h6>
@@ -130,14 +131,19 @@
             document.getElementById("lastTemp").innerText = Number.parseFloat(tempz[tempz.length-1]).toFixed(2) + '℉'
         else   
             document.getElementById("lastTemp").innerText = "No data available"
-        if(tempz.length>0)
+        if(cpu.length>0)
             document.getElementById("lastCPU").innerText = Number.parseFloat(cpu[cpu.length-1]).toFixed(2)
         else   
             document.getElementById("lastCPU").innerText = "No data available"
-        if(tempz.length>0)
+        if(mem.length>0)
             document.getElementById("lastMem").innerText = Number.parseFloat(mem[mem.length-1]).toFixed(2)
         else   
             document.getElementById("lastMem").innerText = "No data available"
+        if(doc.data()["temps"].length>0&&doc.data()["temps"][doc.data()["temps"].length-1]["status"])
+            document.getElementById("lastStatus").innerText = doc.data()["temps"][doc.data()["temps"].length-1]["status"]
+        else   
+            document.getElementById("lastStatus").innerText = "No data available"
+            
             
         var trace2 = {
             x: timez,
