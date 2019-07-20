@@ -110,12 +110,14 @@ var fullScreenYet = false
             logToFirebase("Refreshing Slides")
             //await page.click('div[title="Play"]')
             await page.goto(params["link"],{timeout:120000,waitUntil:"domcontentloaded"});
+            await page.waitFor(3000)
+            logToFirebase("Done refreshing Slides")
             let fullScreenBtnExists = null;
             do{
                 if(fullScreenBtnExists != null)
                     await page.waitFor(1000)
                 fullScreenBtnExists = await page.evaluate(()=>{
-                    if(document.querySelector('[title="Full screen (Ctrl+Shift+F)"]')){
+                    if(document.querySelector('[title="Full screen (Ctrl+Shift+F)"]')&&document.querySelector('div[class="punch-viewer-icon punch-viewer-full-screen goog-inline-block"]')){
                         return true
                     }
                     return false
