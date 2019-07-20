@@ -1,4 +1,4 @@
-const pi = false;
+const pi = true;
 
 const puppeteer = require('puppeteer');
 var fetchVideoInfo = require('youtube-info');
@@ -110,7 +110,6 @@ var fullScreenYet = false
             logToFirebase("Refreshing Slides")
             //await page.click('div[title="Play"]')
             await page.goto(params["link"],{timeout:120000,waitUntil:"domcontentloaded"});
-            await page.waitFor(3000)
             logToFirebase("Done refreshing Slides")
             let fullScreenBtnExists = null;
             do{
@@ -126,8 +125,25 @@ var fullScreenYet = false
             }while(!fullScreenBtnExists)
             logToFirebase("Removing Title from Btn")
             await page.evaluate(()=>document.querySelector('[title="Full screen (Ctrl+Shift+F)"]').title="")
-            logToFirebase("Clicking Full Screen")
-            await page.click('div[class="punch-viewer-icon punch-viewer-full-screen goog-inline-block"]')
+            let isFullScreen = false;
+            do{
+                if(!isFullScreen){
+                    logToFirebase("Clicking Full Screen")
+                    //Intental no await due to a bug with puppetter's resolving of click promises
+                    page.click('div[class="punch-viewer-icon punch-viewer-full-screen goog-inline-block"]')
+                    await page.waitFor(500)
+                    logToFirebase("Clicked Full Screen")
+                }
+                isFullScreen = await page.evaluate(()=>{
+                    if(document.getElementsByClassName("punch-viewer-icon punch-viewer-full-screen goog-inline-block")[0].parentElement.style.display == "none"){
+                        return true
+                    }else{
+                        return false
+                    }
+                })
+                logToFirebase("Checking for Full Screen status - "+isFullScreen)
+            }while(!isFullScreen)
+            
             logToFirebase("Clicked Full Screen")
             /* await page.keyboard.down('Control');
             await page.keyboard.down('Shift');
