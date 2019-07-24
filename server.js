@@ -20,6 +20,14 @@ var os = require('os-utils');
 
 (async () => {
 
+    for(var i=0;i!=9999;i++){
+        var mouse = robot.getMousePos();
+        // Get pixel color in hex format.
+        var hex = robot.getPixelColor(mouse.x, mouse.y);
+        console.log("#" + hex + " at x:" + mouse.x + " y:" + mouse.y);
+        await page.waitFor(300)
+    }
+
 var fullScreenYet = false
 
     var questions = [{
