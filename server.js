@@ -1,5 +1,6 @@
 const pi = true;
 
+var robot = require("robotjs");
 const puppeteer = require('puppeteer');
 var fetchVideoInfo = require('youtube-info');
 const inquirer = require('inquirer');
