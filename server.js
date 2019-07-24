@@ -63,16 +63,6 @@ var fullScreenYet = false
     await page.keyboard.down('Shift');
     await page.keyboard.press('KeyF');*/
 
-    for(var x = 0; x!=10;x++){
-        robot.moveMouse(343+10-x, 932+10-x)
-        await page.waitFor(100)
-    }
-    console.log(robot.getPixelColor(343, 932))
-    if("ffffff" == robot.getPixelColor(343, 932)){
-        robot.mouseClick()
-        console.log("clicked")
-    }
-
     while(1){
         await page.waitFor(500)
         var vid = await page.evaluate(()=>document.getElementsByTagName("iframe").length>0 && document.getElementsByTagName("iframe")[document.getElementsByTagName("iframe").length-1].parentElement.parentElement.style.display != "none")
@@ -160,6 +150,18 @@ var fullScreenYet = false
                     logToFirebase(await page.evaluate(()=>document.getElementsByClassName("punch-viewer-icon punch-viewer-full-screen goog-inline-block")[0].parentElement.outerHTML))
                 }
             }while(!isFullScreen&&failedAttempts<20)
+            if(failedAttempts==20){
+                logToFirebase("Attempting to move mouse")
+                for(var x = 0; x!=10;x++){
+                    await page.waitFor(100)
+                    robot.moveMouse(343+10-x, 932+10-x)
+                }
+                logToFirebase("Color - " + robot.getPixelColor(343, 932))
+                if("ffffff" == robot.getPixelColor(343, 932)){
+                    robot.mouseClick()
+                    logToFirebase("Clicked")
+                }
+            }
             /* await page.keyboard.down('Control');
             await page.keyboard.down('Shift');
             await page.keyboard.press('KeyF'); */
