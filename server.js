@@ -63,6 +63,10 @@ var fullScreenYet = false
     await page.keyboard.down('Shift');
     await page.keyboard.press('KeyF');*/
 
+    for(var x = 0; x!=10;x++){
+        await page.waitFor(100)
+        robot.mouseMove(343+10-x, 932+10-x)
+    }
     console.log(robot.getPixelColor(343, 932))
     if("#ffffff" == robot.getPixelColor(343, 932)){
         robot.mouseClick(343, 932)
