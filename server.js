@@ -25,7 +25,7 @@ var fullScreenYet = false
 
     var questions = [{
         name:"link",
-        default:"https://docs.google.com/presentation/d/e/2PACX-1vRAGVJsh2vJkXe6fs0WHGKZveHICMFNnAnPJp4VARQZKlsJPmlKRb_41MobG2tbR0OhzWpNdxIbPGW5/pub?start=true&loop=true&delayms=60000",
+        default:"https://docs.google.com/presentation/d/e/2PACX-1vRAGVJsh2vJkXe6fs0WHGKZveHICMFNnAnPJp4VARQZKlsJPmlKRb_41MobG2tbR0OhzWpNdxIbPGW5/pub?start=false&loop=false&delayms=60000",
         message:"Link to Google Slides presentation (make sure it is published)"
     },
     {
