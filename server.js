@@ -1,6 +1,7 @@
-const pi = true;
+const pi = trur;
 
-var robot = require("robotjs");
+if(pi)
+    var robot = require("robotjs");
 const puppeteer = require('puppeteer');
 var fetchVideoInfo = require('youtube-info');
 const inquirer = require('inquirer');
@@ -150,7 +151,7 @@ var fullScreenYet = false
                     logToFirebase(await page.evaluate(()=>document.getElementsByClassName("punch-viewer-icon punch-viewer-full-screen goog-inline-block")[0].parentElement.outerHTML))
                 }
             }while(!isFullScreen&&failedAttempts<20)
-            if(failedAttempts==20){
+            if(failedAttempts==20&&pi){
                 logToFirebase("Attempting to move mouse")
                 for(var x = 0; x!=10;x++){
                     await page.waitFor(100)
