@@ -1,4 +1,4 @@
-const pi = trur;
+const pi = true;
 
 if(pi)
     var robot = require("robotjs");
@@ -152,16 +152,22 @@ var fullScreenYet = false
                 }
             }while(!isFullScreen&&failedAttempts<20)
             if(failedAttempts==20&&pi){
-                logToFirebase("Attempting to move mouse")
-                for(var x = 0; x!=10;x++){
-                    await page.waitFor(100)
-                    robot.moveMouse(343+10-x, 932+10-x)
-                }
-                logToFirebase("Color - " + robot.getPixelColor(343, 932))
-                if("ffffff" == robot.getPixelColor(343, 932)){
-                    robot.mouseClick()
-                    logToFirebase("Clicked")
-                }
+                var failedForcedClicks = 1;
+                do{
+                    logToFirebase("Attempting to move mouse")
+                    for(var x = 0; x!=10;x++){
+                        await page.waitFor(100)
+                        robot.moveMouse(343+10-x, 932+10-x)
+                    }
+                    logToFirebase("Color - " + robot.getPixelColor(343, 932)+" - Attempt #"+failedForcedClicks)
+                    if("ffffff" == robot.getPixelColor(343, 932)){
+                        robot.mouseClick()
+                        logToFirebase("Clicked")
+                        failedForcedClicks = -1;
+                    }else{
+                        failedForcedClicks++;
+                    }
+                }while(failedForcedClicks<=10&&failedForcedClicks!=-1)
             }
             /* await page.keyboard.down('Control');
             await page.keyboard.down('Shift');
