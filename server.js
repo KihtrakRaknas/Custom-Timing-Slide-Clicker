@@ -129,7 +129,7 @@ var fullScreenYet = false
             logToFirebase("Removing Title from Btn")
             await page.evaluate(()=>document.querySelector('[title="Full screen (Ctrl+Shift+F)"]').title="")
             let isFullScreen = false;
-            let failedAttempts = 0;
+            let failedAttempts = 20/*0;
             do{
                 failedAttempts++
                 if(!isFullScreen){
@@ -150,7 +150,7 @@ var fullScreenYet = false
                 if(failedAttempts>10){
                     logToFirebase(await page.evaluate(()=>document.getElementsByClassName("punch-viewer-icon punch-viewer-full-screen goog-inline-block")[0].parentElement.outerHTML))
                 }
-            }while(!isFullScreen&&failedAttempts<20)
+            }while(!isFullScreen&&failedAttempts<20)*/
             if(failedAttempts==20&&pi){
                 var failedForcedClicks = 1;
                 do{
@@ -167,7 +167,7 @@ var fullScreenYet = false
                         failedForcedClicks++;
                     }
                 }while(failedForcedClicks<=10&&failedForcedClicks!=-1)
-                await page.evaluate(()=>document.getElementsByClassName("punch-viewer-nav-v2 punch-viewer-nav-floating")[0].classList.remove("punch-viewer-nav-fade-out"))
+                await page.evaluate(()=>document.getElementsByClassName("punch-viewer-nav-v2 punch-viewer-nav-floating")[0].classList.add("punch-viewer-nav-fade-out"))
             }
             /* await page.keyboard.down('Control');
             await page.keyboard.down('Shift');
