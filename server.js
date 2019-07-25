@@ -155,10 +155,9 @@ var fullScreenYet = false
                 var failedForcedClicks = 1;
                 do{
                     logToFirebase("Attempting to move mouse")
-                    for(var x = 0; x!=10;x++){
-                        await page.waitFor(100)
-                        robot.moveMouse(343+10-x, 932+10-x)
-                    }
+                    await page.evaluate(()=>document.getElementsByClassName("punch-viewer-nav-v2 punch-viewer-nav-floating")[0].classList.remove("punch-viewer-nav-fade-out"))
+                    robot.moveMouse(343, 932)
+                    await page.waitFor(100*failedForcedClicks)
                     logToFirebase("Color - " + robot.getPixelColor(343, 932)+" - Attempt #"+failedForcedClicks)
                     if("ffffff" == robot.getPixelColor(343, 932)){
                         robot.mouseClick()
@@ -168,6 +167,7 @@ var fullScreenYet = false
                         failedForcedClicks++;
                     }
                 }while(failedForcedClicks<=10&&failedForcedClicks!=-1)
+                await page.evaluate(()=>document.getElementsByClassName("punch-viewer-nav-v2 punch-viewer-nav-floating")[0].classList.remove("punch-viewer-nav-fade-out"))
             }
             /* await page.keyboard.down('Control');
             await page.keyboard.down('Shift');
