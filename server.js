@@ -129,7 +129,7 @@ var fullScreenYet = false
             logToFirebase("Removing Title from Btn")
             await page.evaluate(()=>document.querySelector('[title="Full screen (Ctrl+Shift+F)"]').title="")
             let isFullScreen = false;
-            let failedAttempts = 20/*0;
+            let failedAttempts = 0;
             do{
                 failedAttempts++
                 if(!isFullScreen){
@@ -150,7 +150,7 @@ var fullScreenYet = false
                 if(failedAttempts>10){
                     logToFirebase(await page.evaluate(()=>document.getElementsByClassName("punch-viewer-icon punch-viewer-full-screen goog-inline-block")[0].parentElement.outerHTML))
                 }
-            }while(!isFullScreen&&failedAttempts<20)*/
+            }while(!isFullScreen&&failedAttempts<20)
             if(failedAttempts==20&&pi){
                 var failedForcedClicks = 1;
                 do{
