@@ -159,7 +159,7 @@ var fullScreenYet = false
                     robot.moveMouse(343, 932)
                     await page.waitFor(100*failedForcedClicks)
                     logToFirebase("Color - " + robot.getPixelColor(343, 932)+" - Attempt #"+failedForcedClicks)
-                    if("ffffff" == robot.getPixelColor(343, 932)){
+                    if("ffffff" == robot.getPixelColor(343, 932) || "323232" == robot.getPixelColor(343, 932)){
                         robot.mouseClick()
                         logToFirebase("Clicked")
                         failedForcedClicks = -1;
